@@ -1,0 +1,54 @@
+version: '3.3'
+services:
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: admin
+    restart: unless-stopped
+    volumes:
+     - mariadb_data:/var/lib/mysql
+  postgres:
+    image: 'postgres'
+    container_name: postgres
+    restart: always
+    environment:
+        POSTGRES_DB: postgres
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: admin
+        PGDATA: /var/lib/postgresql/data
+    ports:
+    - '5432:5432'
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - mongodb_data:/data/db
+  redis:
+    image: redis
+    container_name: redis
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_HOST_PASSWORD"
+    env_file:
+      - redis.env
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+    restart: always
+volumes:
+  mysql_data:
+  redis_data:
+  mongodb_data:
+  postgres_data:
+  mariadb_data:
