@@ -53,7 +53,7 @@ services:
     container_name: redis
     command: /bin/sh -c "redis-server --requirepass $$REDIS_HOST_PASSWORD"
     env_file:
-      - redis.env
+      - redis.env #you must write REDIS_HOST_PASSWORD=admin on file redis.env
     ports:
       - 6379:6379
     volumes:
