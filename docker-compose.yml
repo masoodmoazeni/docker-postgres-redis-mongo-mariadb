@@ -59,6 +59,50 @@ services:
     volumes:
       - redis_data:/data
     restart: always
+  postgres:
+    image: 'postgres'
+    container_name: postgres
+    restart: always
+    environment:
+        POSTGRES_DB: postgres
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: admin
+        PGDATA: /var/lib/postgresql/data
+    ports:
+    - '5432:5432'
+    volumes:
+    - ./database:/var/lib/postgresql/data
+  mssql:
+    container_name: mssql-db
+    hostname: mssql-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: 'Y'
+      MSSQL_SA_PASSWORD: 'Passw0rd'
+      MSSQL_DATA_DIR: /var/opt/mssql/data
+      MSSQL_PID: 'Developer' 
+      MSSQL_TCP_PORT: 1433 
+    ports: 
+      - "1433:1433"
+    volumes:
+      - ./data:/var/opt/mssql/data
+      - ./log:/var/opt/mssql/log
+      - ./secrets:/var/opt/mssql/secrets
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: 'ekanoon'
+      MYSQL_ROOT_PASSWORD: '97N7R5!&f1At'
+      TZ: Asia/Tehran
+      # command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-time-zone=+03:30']
+    ports:
+      - "6033:3306"
+    volumes:
+      - ./data/conf.d:/etc/mysql/conf.d
+      - ./data/logs:/logs
+      - /usr/local/var/mysql:/var/lib/mysqldocker container stop
 volumes:
   mysql_data:
   redis_data:
